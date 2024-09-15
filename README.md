@@ -141,3 +141,12 @@ Overall, both models demonstrated strong performance in extracting food-related 
 
 
 ### another example has been provided in kaggle notebook to show how to train model to tag a stop word
+
+### References
+
+<br>
+ 1- https://aclanthology.org/J96-1002.pdf
+ 
+ <br>
+
+ 2- https://www.bing.com/ck/a?!&&p=8a8829c85c466b73JmltdHM9MTcyNjM1ODQwMCZpZ3VpZD0xMDdhN2FmMS03MTMyLTY1MTYtMzNhMS02OTA5NzA0ZTY0OGMmaW5zaWQ9NTIwNA&ptn=3&ver=2&hsh=3&fclid=107a7af1-7132-6516-33a1-6909704e648c&psq=Log-linear+models++and+conditional+random+fields++Charles+Elkan&u=a1aHR0cHM6Ly9jc2V3ZWIudWNzZC5lZHUvfmVsa2FuLzI1MEJmYWxsMjAwNy9sb2dsaW5lYXIucGRm&ntb=1
