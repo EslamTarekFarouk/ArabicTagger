@@ -17,7 +17,7 @@ setup(
     description="A CRF layer and BI-LSTM+CRF model implemented in Keras",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/my_package",
+    url="https://github.com/EslamTarekFarouk/ArabicTagger",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

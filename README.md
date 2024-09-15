@@ -1,6 +1,6 @@
 # ArabicTagger 
-<a href='' target="_blank"><img alt='Python' src='https://img.shields.io/badge/Python_3.x-100000?style=plastic&logo=Python&logoColor=000000&labelColor=C7C7C7&color=73FFBB'/></a><a href='' target="_blank"><img alt='TensorFlow' src='https://img.shields.io/badge/TensorFlow_2.10.0-100000?style=flat&logo=TensorFlow&logoColor=FF7B2E&labelColor=D0CFCE&color=73FFBB'/></a><a href='' target="_blank"><img alt='Keras' src='https://img.shields.io/badge/Keras_2.10.0-100000?style=flat&logo=Keras&logoColor=FF0B0B&labelColor=D0CFCE&color=73FFBB'/></a>
-<a href='https://github.com/shivamkapasia0' target="_blank"><img alt='Kaggle' src='https://img.shields.io/badge/Kaggle-100000?style=plastic&logo=Kaggle&logoColor=00BBFF&labelColor=D0CFCE&color=73FFBB'/></a>
+<a href='https://pypi.org/project/ArabicTagger/' target="_blank"><img alt='Python' src='https://img.shields.io/badge/Python_3.x-100000?style=plastic&logo=Python&logoColor=000000&labelColor=C7C7C7&color=73FFBB'/></a><a href='https://pypi.org/project/ArabicTagger/' target="_blank"><img alt='TensorFlow' src='https://img.shields.io/badge/TensorFlow_2.10.0-100000?style=flat&logo=TensorFlow&logoColor=FF7B2E&labelColor=D0CFCE&color=73FFBB'/></a><a href='https://pypi.org/project/ArabicTagger/' target="_blank"><img alt='Keras' src='https://img.shields.io/badge/Keras_2.10.0-100000?style=flat&logo=Keras&logoColor=FF0B0B&labelColor=D0CFCE&color=73FFBB'/></a>
+<a href='https://www.kaggle.com/code/eslamtf/arabictagger' target="_blank"><img alt='Kaggle' src='https://img.shields.io/badge/Kaggle-100000?style=plastic&logo=Kaggle&logoColor=00BBFF&labelColor=D0CFCE&color=73FFBB'/></a>
 <p style = "font-family:Cursive">
 ArabicTagger is a Python package that has the following components:- 
 <br>
