@@ -6,10 +6,11 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="ArabicTagger",  
-    version="0.1.7b1",
+    version="0.1.1b2",
     packages=find_packages(),
     install_requires=["tensorflow==2.10.0",\
                       "keras==2.10.0",\
+                      "nltk",\
                        "bpemb", "numpy"],
     include_package_data=True,
     author="Eslam Tarek Farouk",
