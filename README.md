@@ -149,3 +149,159 @@ Overall, both models demonstrated strong performance in extracting food-related 
 
  <br>
  2- https://cseweb.ucsd.edu/~elkan/250Bfall2007/loglinear.pdf
+
+ <br>
+
+ # Arabic Text Matcher
+
+**TextMatcher** is a module designed to address a common problem in
+Arabic NLP:  
+Suppose you’re building a model to handle customer orders and process
+transactions automatically. You've implemented a Named Entity
+Recognition (NER) model to extract device names in Arabic, such as
+(<span dir="rtl">غسالة, تلفاز, شاشة, مروحة</span>). After identifying
+these devices, you need to match them with entries in your database to
+check stock availability.
+
+However, issues arise when there's a spelling variation. For instance, a
+customer might type "<span dir="rtl">غساله</span>," but in your
+database, the device is listed as "<span dir="rtl">غسالة</span>." A
+standard search would fail to match these two, even though they
+represent the same item.
+
+This issue is known as **orthographic** or **spelling variation** and is
+a challenge for information retrieval in Arabic. Many approaches exist
+to address this, and in the **ArabicTagger** package, I approached the
+problem with a learnable weighted similarity. This method reduces the
+number of parameters and shortens training time while improving matching
+accuracy across spelling variations.
+
+Let’s define a set of tuples each tuple has two words the first is the
+word normalized one and the second word is the other variant e.x
+
+K = <span dir="rtl"></span>{(“ <span dir="rtl">غسالة</span>”,”
+<span dir="rtl">غساله</span>”),(“<span dir="rtl">مروحة</span>”,”<span dir="rtl">المروحه</span>”),…….}
+
+And another set of tuples each tuple has two words that are dissimilar
+to each other e.x
+
+J = {(“
+<span dir="rtl">غسالة</span>”,”<span dir="rtl">مروحة</span>”),(“<span dir="rtl">مروحة</span>”,”<span dir="rtl">تلاجة</span>”),…….}
+
+Let S<sub>k</sub> be the similarity between two elements in the set K,
+Sj be the similarity between the elements in the set J such that:
+
+$`S_{k} = \frac{\sum_{i = 1}^{m}{W_{i}^{2}{\ I}_{ik}}\ I_{ik}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ik}^{2}}\ \sqrt{\sum_{i = 1}^{m}I_{ik}^{2}}}\ \ `$
+
+$`S_{j} = \ \frac{\sum_{i = 1}^{m}{W_{i}^{2}{\ I}_{ij}}\ I_{ij}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ij}^{2}}\ \sqrt{\sum_{i = 1}^{m}I_{ij}^{2}}}\ \ \ \ `$
+
+Where m is the vector length, W<sub>i</sub> is a learnable parameter for
+each position in that vector.
+
+We want to maximize the average similarity of pairs in the set K and
+simultaneously minimize the average similarity of pairs in the set J, we
+also want the weights W<sub>i</sub> to sum up to 1 (this constraint can
+be relaxed) the problem can be formulated as follows.
+
+$`\max_{W_{i}}{\frac{1}{n_{1}}\ \sum_{k = 1}^{n_{1}}S_{k} - \ \frac{1}{n_{2}}\ \sum_{j = 1}^{n_{2}}S_{j}}\ \ `$
+
+$`s.t\ \ \ \ \ \ \ \sum_{i = 1}^{m}{W_{i} = 1}`$
+
+This problem can be solved using the Lagrange multipliers method as
+follows :
+
+$`L\left( W_{i},\ \ \lambda \right) = \ \frac{1}{n_{1}}\ \sum_{k = 1}^{n_{1}}S_{k} - \ \frac{1}{n_{2}}\ \sum_{j = 1}^{n_{2}}S_{j} - \lambda\ (\sum_{i = 1}^{m}{W_{i} - 1})`$.
+
+$`L\left( W_{i},\ \ \lambda \right) = \ \frac{1}{n_{1}}\ \sum_{k = 1}^{n_{1}}\frac{\sum_{i = 1}^{m}{W_{i}^{2}{\ I}_{ik}}\ I_{ik}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ik}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ik}^{\sim}}^{2}}} - \ \frac{1}{n_{2}}\ \sum_{j = 1}^{n_{2}}{\frac{\sum_{i = 1}^{m}{W_{i}^{2}{\ I}_{ij}}\ I_{ij}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ij}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ij}^{\sim}}^{2}}}\ } - \lambda\ (\sum_{i = 1}^{m}{W_{i} - 1})`$.
+
+$`\nabla\ L = \ \begin{bmatrix}
+\frac{1}{n_{1}}\ \sum_{k = 1}^{n_{1}}{\frac{{2\ W_{i}\ \ I}_{ik}\ I_{ik}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ik}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ik}^{\sim}}^{2}}}\  - \ }\frac{1}{n_{2}}\ \sum_{j = 1}^{n_{2}}{\frac{{{\ 2\ W}_{i}\ \ I}_{ij}\ I_{ij}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ij}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ij}^{\sim}}^{2}}}\  - \ \lambda\ \ } \\
+\sum_{i = 1}^{m}{W_{i} - 1}
+\end{bmatrix} = \ \begin{bmatrix}
+0 \\
+0
+\end{bmatrix}\ `$
+
+$`2\ W_{i}\ (\frac{1}{n_{1}}\ \sum_{k = 1}^{n_{1}}{\frac{{\ \ I}_{ik}\ I_{ik}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ik}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ik}^{\sim}}^{2}}}\  - \ }\frac{1}{n_{2}}\ \sum_{j = 1}^{n_{2}}{\frac{{\ \ I}_{ij}\ I_{ij}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ij}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ij}^{\sim}}^{2}}})\  = \ \lambda\ }`$
+
+$`W_{i}\  = \ \frac{\lambda}{2}{(\frac{1}{n_{1}}\ \sum_{k = 1}^{n_{1}}{\frac{{\ \ I}_{ik}\ I_{ik}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ik}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ik}^{\sim}}^{2}}}\  - \ }\frac{1}{n_{2}}\ \sum_{j = 1}^{n_{2}}{\frac{{\ \ I}_{ij}\ I_{ij}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ij}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ij}^{\sim}}^{2}}})\ \ }}^{- 1}`$
+(1)
+
+$`{\sum_{i = \ 1}^{m}W}_{i} = \frac{\lambda}{2}\ \sum_{i = \ 1}^{m}{(\frac{1}{n_{1}}\ \sum_{k = 1}^{n_{1}}{\frac{{\ \ I}_{ik}\ I_{ik}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ik}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ik}^{\sim}}^{2}}}\  - \ }\frac{1}{n_{2}}\ \sum_{j = 1}^{n_{2}}{\frac{{\ \ I}_{ij}\ I_{ij}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ij}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ij}^{\sim}}^{2}}})\ }}^{- 1}`$
+.
+
+From the second constraint $`\sum_{i = 1}^{m}{W_{i} = 1}`$ then,
+
+$`1 = \frac{\lambda}{2}\ \sum_{i = \ 1}^{m}{(\frac{1}{n_{1}}\ \sum_{k = 1}^{n_{1}}{\frac{{\ \ I}_{ik}\ I_{ik}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ik}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ik}^{\sim}}^{2}}}\  - \ }\frac{1}{n_{2}}\ \sum_{j = 1}^{n_{2}}{\frac{{\ \ I}_{ij}\ I_{ij}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ij}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ij}^{\sim}}^{2}}})\ }}^{- 1}`$
+.
+
+$`\lambda = 2\ {(\sum_{i = \ 1}^{m}{(\frac{1}{n_{1}}\ \sum_{k = 1}^{n_{1}}{\frac{{\ \ I}_{ik}\ I_{ik}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ik}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ik}^{\sim}}^{2}}}\  - \ }\frac{1}{n_{2}}\ \sum_{j = 1}^{n_{2}}{\frac{{\ \ I}_{ij}\ I_{ij}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ij}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ij}^{\sim}}^{2}}})\ }}^{- 1})}^{- 1} = \ 2N_{\mathcal{f}}`$
+
+Where $`N_{\mathcal{f}}\ `$Is a normalization factor.
+
+Substitute $`\lambda\ `$in equation (1) to get $`W_{i}`$ As follows :
+
+$`W_{i}\  = \ N_{\mathcal{f}}{(\frac{1}{n_{1}}\ \sum_{k = 1}^{n_{1}}{\frac{{\ \ I}_{ik}\ I_{ik}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ik}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ik}^{\sim}}^{2}}}\  - \ }\frac{1}{n_{2}}\ \sum_{j = 1}^{n_{2}}{\frac{{\ \ I}_{ij}\ I_{ij}^{\sim}}{\sqrt{\sum_{i = 1}^{m}I_{ij}^{2}}\ \sqrt{\sum_{i = 1}^{m}{I_{ij}^{\sim}}^{2}}})\ \ }}^{- 1}`$
+
+That simply means the model will estimate each weight. $`W_{i}`$ Based
+on the inverse of the similarity of both sets K and J at that position
+i.
+
+This approach is similar to the attention mechanism, where the model
+focuses on positions that lead to high similarity in set K and low
+similarity in set J. The positions are defined using a specific strategy
+in **TextMatcher** as follows:
+
+{
+
+'<span dir="rtl">ا': 0</span>,
+
+'<span dir="rtl">ب': 1</span>,
+
+'<span dir="rtl">ت': 2</span>,
+
+'<span dir="rtl">ة': 3</span>,
+
+'<span dir="rtl">ث': 4</span>,
+
+'<span dir="rtl">ج': 5</span>,
+
+'<span dir="rtl">ح': 6</span>,
+
+...
+
+'<span dir="rtl">اه': 61</span>,
+
+'<span dir="rtl">او': 62</span>,
+
+'<span dir="rtl">اي': 63</span>,
+
+'<span dir="rtl">اء': 64</span>,
+
+'<span dir="rtl">اآ': 65</span>,
+
+'<span dir="rtl">اأ': 66</span>,
+
+'<span dir="rtl">اؤ': 67</span>,
+
+'<span dir="rtl">اإ': 68</span>,
+
+...
+
+}
+
+The dictionary contains 1,260 entries. We initialize an empty vector of
+size 1,260, then loop through each word's 1-grams and 2-grams. For each
+match, we update the corresponding vector position using the following
+formula:
+
+Vector\[i\] = Vector\[i\] + 1 + func(i)
+
+Here, func(i) is a position-encoding function that adjusts the value
+based on the position of the character or 2-gram within the word.
+
+In future versions, I hope to add other methods to deal with this
+problem
+
+For more info about how to use **TextMatcher** see Kaggle notebook at
+GitHub.
