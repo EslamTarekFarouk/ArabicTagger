@@ -1,4 +1,6 @@
 include ArabicTagger/models/CRF_model_1.pkl
 include ArabicTagger/models/CRF_model_2.pkl
+include ArabicTagger/models/Matcher_weights1.pkl
 include ArabicTagger/tags/tags1.pkl
 include ArabicTagger/tags/tags2.pkl
+include ArabicTagger/dict/alphabets_indx.pkl
