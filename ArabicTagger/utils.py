@@ -65,3 +65,29 @@ def golden_section(fun, inte, ite = 10):
         counter += 1
     res = (x1+x2)/2
     return res
+
+def positional_embeddings(d, n, c = 10000):
+    """
+    get the positional embeddings of embeddings of size [d,n]
+    inputs :
+        d (int) -------------------> is the diemnsion of the embeddings
+        n (int) -------------------> is the number of tokens in the sentence
+        c (int) -------------------> hyperparameter by default 10000
+    output :
+        tokens (List[list[]])------> positional embeddings for the tokens as list of lists
+    """
+    tokens = []
+    for position in range(n):
+        tokens.append([])
+        for i in range(d):
+            # if i is even calculate even_pe
+            if i%2 == 0:
+                even_d    = math.pow(c, i/d)
+                even_pe = math.sin(position/ even_d)
+                tokens[position].append(even_pe)
+            # if i is odd calculate odd_pe    
+            else:
+                odd_d    = math.pow(c, i/d)
+                odd_pe = math.cos(position/ odd_d)
+                tokens[position].append(odd_pe)            
+    return tokens

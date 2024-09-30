@@ -4,12 +4,16 @@
 <p style = "font-family:Cursive">
 ArabicTagger is a Python package that has the following components:- 
 <br>
+ 
 1- a CRF layer implemented in Keras
-<br>    
-2- a BI-LSTM + CRF model implemneted in keras
+<br>2- a BI-LSTM + CRF model implemneted in keras
 <br>
 3- Build and train your own Arabic NER models using pre-existing models with minimal lines of code
  and only the desired tags
+<br>
+4- Encoder-only Transformer Layer implemented in Keras
+<br>
+5- TextMatcher module 
 </p>
 <br>
 
@@ -36,21 +40,21 @@ model = NER(20, 13, 7, 300, udt = [13])
 model.compile(optimizer=tf.keras.optimizers.Adam(0.05))
 model.fit([X1,Y1], Y1, epochs = 4 , batch_size = len(X1))
 ```
-### CRF
+## CRF
 
 <p style = "font-family:Cursive">
 CRF is a Keras layer that has been created using subclassing, the call of the layer takes a list or tuple of the inputs and the output of shape (n+2, m) (n+2,) respectively another optional parameter is return_loss which is set to True by default. If return_loss is set to false the loss will be added to the final loss at the output layer of the model.
 </p>
 <br>
 
-###  NER
+##  NER
 
 <p style = "font-family:Cursive">
 NER is the BI-LSTM + CRF model, this model goes beyond being a simple model but it has additional metrics defined inside it like udt_accuracy which calculates the total accuracy based on the user-defined tags this will be clear in the Tagger section 
 </p>
 <br>
 
-### Tagger
+## Tagger
 
 <p style = "font-family:Cursive">
 The Tagger module is a valuable asset for NLP tasks, particularly Named Entity Recognition (NER). It empowers users to create custom NER models by simply annotating their data. This annotation process involves labeling specific words or phrases as interest entities (e.g., "DEVICE").
@@ -151,6 +155,13 @@ Overall, both models demonstrated strong performance in extracting food-related 
  2- https://cseweb.ucsd.edu/~elkan/250Bfall2007/loglinear.pdf
 
  <br>
+ 
+## Encoder-Transformer
+<p style = "font-family:Cursive">
+ The custom Transformer encoder layer in Keras is designed for tagging problems where each input sequence is associated with a single tag. It processes token embeddings and applies the Transformer encoding mechanism to capture relevant sequence patterns and relationships between tokens. It's particularly effective for tasks involving tagging or classification of sequences. It is optimized using the Adam optimizer with binary cross-entropy loss, which is ideal for binary or multi-label classification. However, it performs best with large datasets due to the Transformer model's complexity
+</p>
+
+<br>
 
  # Arabic Text Matcher
 
