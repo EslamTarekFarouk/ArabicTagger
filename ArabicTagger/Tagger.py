@@ -120,10 +120,13 @@ class Tagger:
         # private method
         # vectorize the input words using the embedding model BPEmb
         w_matrix    = []
-        # start word are set of zeros
-        w_matrix = [[0]*300]
+        # start word are set of ones
+        w_matrix = [[1]*300]
         for word in words:
-            embeds = self.embedding.embed(word)
+            if word == "<PAD>":
+                embeds = np.zeros([1,300])
+            else:
+                embeds = self.embedding.embed(word)
             if len(embeds) > 1:
                 embeds = np.average(embeds, axis = 0).reshape([1,embeds.shape[1]])
             w_matrix.append(embeds.tolist()[0])
