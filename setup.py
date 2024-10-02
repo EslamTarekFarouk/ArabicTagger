@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 with open("README.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read(9591)
+    long_description = fh.read(9585)
 
 
 setup(
@@ -15,7 +15,7 @@ setup(
     include_package_data=True,
     author="Eslam Tarek Farouk",
     author_email='cds.eslamtarek96337@alexu.edu.eg',
-    description="A CRF layer and BI-LSTM+CRF model implemented in Keras",
+    description="A CRF, Encoder-Transformer layers, and BI-LSTM+CRF model were implemented in Keras with other modules.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/EslamTarekFarouk/ArabicTagger",
